@@ -1,0 +1,152 @@
+% tyj.sty
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tyj}
+
+\newif\ifpset
+\psetfalse
+\DeclareOption{pset}{\psettrue}
+\ProcessOptions\relax
+
+\RequirePackage{
+  amsmath,
+  amssymb,
+  amsthm,
+  fancyhdr,
+  mathpazo
+}
+\RequirePackage{setspace}
+\setstretch{1.15}
+\RequirePackage[dvipsnames]{xcolor}
+\RequirePackage[most,breakable]{tcolorbox}
+\RequirePackage[inline]{asymptote} %if i need
+
+\definecolor{DarkBlue}{RGB}{25,58,111} %Problem header in set
+\definecolor{AquaBlue}{RGB}{0,92,175} %Problem text,frame; Internal links
+\definecolor{PaleBlue}{RGB}{248,250,255} %v light blue
+\definecolor{Cerise}{RGB}{222,49,99} %External Links
+\definecolor{MutedRed}{RGB}{145,40,40} %Solution
+\definecolor{Green}{RGB}{0,110,90}
+\definecolor{PaleGreen}{RGB}{247,252,249} %v light green
+\definecolor{Purple}{RGB}{110,60,170}
+\definecolor{PalePurple}{RGB}{250,248,255} %v light purple
+
+
+\RequirePackage[colorlinks=true, linkcolor=AquaBlue, urlcolor=Cerise]{hyperref}
+
+%\newlist{}{} - if i want
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Page layout
+%%%%%%%%%%%%%%%%%%%%%%
+
+\ifpset
+
+  \RequirePackage[a4paper, left=2.80cm, right=2.80cm, top=3.0cm, bottom=2.54cm, headheight=14pt, headsep=0.8cm]{geometry}
+  
+  %titling
+  \RequirePackage{titling}
+  \setlength{\droptitle}{-3em}
+  \pretitle{\raggedright\fontsize{20pt}{24pt}\selectfont\itshape} 
+  \posttitle{\nopagebreak\par\vspace{0.5em}} 
+  
+  \preauthor{\raggedright\fontsize{10.5pt}{12.6pt}\selectfont}
+  \postauthor{\nopagebreak\par\vspace{0.2em}}
+  
+  \predate{\raggedright\fontsize{10.5pt}{12.6pt}\selectfont}
+  \postdate{\nopagebreak\par}
+   
+  %abstract
+  \renewenvironment{abstract}
+    {\par\noindent\rule{\linewidth}{0.4pt}\par\vspace{0.5em}\small}
+    {\par\vspace{0.5em}\noindent\rule{\linewidth}{0.4pt}\par}
+    
+  % header/footer
+  \pagestyle{fancy}
+  \fancyhf{}
+  
+  \lhead{\thetitle}
+  \rhead{\theauthor}
+  \cfoot{\thepage}
+  
+  % theorem boxes
+  \tcbset{
+    setup/.style={
+      enhanced, %enhanced features
+      breakable, %can extend into new page
+      frame hidden,
+      sharp corners,
+      before skip=10pt,
+      after skip=10pt,
+      separator sign={},
+    },
+    tyjproblem/.style={
+      setup,
+      fonttitle=\bfseries\sffamily,
+      borderline west={2pt}{0pt}{AquaBlue},
+      colback=PaleBlue,
+      coltitle=AquaBlue,
+      toptitle=3pt,
+      bottomtitle=3pt,
+    },
+    tyjsolution/.style={
+      setup,
+      fonttitle=\itshape\sffamily,
+      coltitle=MutedRed,
+      interior hidden,
+      boxsep=0pt, 
+      bottomtitle=-1pt,
+    },
+    tyjinsight/.style={
+      setup,
+      fonttitle=\itshape\sffamily,
+      coltitle=Purple,
+      interior hidden,
+      boxsep=0pt, 
+      bottomtitle=-1pt,
+    },
+    tyjconfig/.style={
+      setup,
+      fonttitle=\bfseries\sffamily,
+      colbacktitle=PaleGreen,
+      coltitle=Green,
+      colback=PaleGreen,
+      toptitle=3pt,
+      bottomtitle=3pt,
+    },
+    tyjtechnique/.style={
+      setup,
+      fonttitle=\bfseries\sffamily,
+      colbacktitle=PalePurple,
+      coltitle=Purple,
+      colback=PalePurple,
+      toptitle=3pt,
+      bottomtitle=3pt,
+    },
+  }
+  
+  % theorem envs
+  \newtcbtheorem[number within=section]{problem}{Problem}{
+    tyjproblem,
+  }{prob}
+  \newtcbtheorem[number within=subsection]{config}{Config}{
+    tyjconfig,
+  }{config}
+  \newtcbtheorem[number within=subsection]{technique}{Technique}{
+    tyjtechnique,
+  }{technique}
+  
+  % unnumbered
+  \newenvironment{insight}
+    {% 
+      \begin{tcolorbox}[tyjinsight, title=Insight, left skip=0pt, right skip=0pt]}
+    {%
+      \end{tcolorbox}
+    }
+  \newenvironment{solution}
+    {% 
+      \begin{tcolorbox}[tyjsolution,title=Solution, left skip=0pt, right skip=0pt]}
+    {%
+      \end{tcolorbox}
+    }
+\fi
